@@ -31,6 +31,8 @@ def GenGrid (variation):
 	editArrayElement(max, 0, max / 2);
 	editArrayElement(max, max, 0);
 	editArrayElement(0, max, max / 2);
+	global map
+	print map
 	
 	#print "Map=%s"%(map)		
 	
@@ -76,15 +78,15 @@ def avgElements(values):
 	return avg
 	
 def square(x, y, size, offset):# upper left	 # upper right	# lower right	# lower left
-	tmpAverage = avgElements([queryArrayElement(x - size, y - size), queryArrayElement(x + size, y - size),  queryArrayElement(x + size, y + size),  queryArrayElement(x - size, y + size) ]);
-	editArrayElement(x, y, tmpAverage + offset);
-        
+    tmpAverage = avgElements([queryArrayElement(x - size, y - size), queryArrayElement(x + size, y - size),  queryArrayElement(x + size, y + size),  queryArrayElement(x - size, y + size) ]);
+    editArrayElement(x, y, tmpAverage + offset);
+            
 def diamond(x, y, size, offset):# top	 # right	 # bottom	 # left
 	tmpAverage = avgElements([  queryArrayElement(x, y - size), queryArrayElement(x + size, y), queryArrayElement(x, y + size),  queryArrayElement(x - size, y) ]);
 	editArrayElement(x, y, tmpAverage + offset);
 
 
-InitGrid = InitGrid(7)
+InitGrid = InitGrid(5)
 GenGrid(1.1);
 
 #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

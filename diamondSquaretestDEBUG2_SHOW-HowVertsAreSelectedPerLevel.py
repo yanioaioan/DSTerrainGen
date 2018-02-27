@@ -6,12 +6,25 @@ import maya.cmds as cmds
 
 cmds.select(all=True)
 cmds.delete()
+size=0
 
-p=cmds.polyPlane(width=10, height=10, subdivisionsX=size-1, subdivisionsY=size-1)
-queryArrayElementVtxPos(p[0])
+
+vtxIndexList=[]
+vtxWorldPosition = []    # will contain positions un space of all object vertex
+def queryArrayElementVtxPos( shapeNode ) :
+    
+    global vtxIndexList
+    vtxIndexList = cmds.getAttr( shapeNode+".vrts", multiIndices=True )
+    
+    for i in vtxIndexList :
+        #print i
+        curPointPosition = cmds.xform( str(shapeNode)+".pnts["+str(i)+"]", query=True, translation=True, worldSpace=True )    # [1.1269192869360154, 4.5408735275268555, 1.3387055339628269]
+        vtxWorldPosition.append( curPointPosition )
+    return vtxWorldPosition
+
+
 
 initSize=0
-size=0
 map=[]
 max=0
 
@@ -25,6 +38,13 @@ def InitGrid(divisions):
 	global map
 	map=[0 for i in range(size*size)]
 	#print "Initial Map=%s"%(map)
+
+
+InitGrid = InitGrid(2)
+
+p=cmds.polyPlane(width=10, height=10, subdivisionsX=size-1, subdivisionsY=size-1)
+queryArrayElementVtxPos(p[0])
+
 
 def queryArrayElement(x, y):
 	if x < 0 or x > max or y < 0 or y > max:
@@ -64,7 +84,7 @@ def SubDivide(size,variation):
 		for y in range (halfsize, max, size):
 			for x in range (halfsize, max, size):
 			    diamond(x, y, halfsize, random.random() * reducedScale * 2 - reducedScale);	
-				
+		
 		#print "Map after Square %d =%s"%(divisions,map)
 		
 		#All square derived vertices are on  the same Y level approximately
@@ -152,29 +172,15 @@ def square(x, y, size, offset):# top	 # right	 # bottom	 # left
     print p[0]+".vtx[%d]"%(x + initSize * y)
     
     cmds.refresh()
-    time.sleep(0.200)
+    time.sleep(0.5)
         
 
 
 
-InitGrid = InitGrid(2)
 GenGrid(10);
 
 #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-vtxIndexList=[]
-vtxWorldPosition = []    # will contain positions un space of all object vertex
-def queryArrayElementVtxPos( shapeNode ) :
-    
-    global vtxIndexList
-    vtxIndexList = cmds.getAttr( shapeNode+".vrts", multiIndices=True )
-    
-    for i in vtxIndexList :
-        #print i
-        curPointPosition = cmds.xform( str(shapeNode)+".pnts["+str(i)+"]", query=True, translation=True, worldSpace=True )    # [1.1269192869360154, 4.5408735275268555, 1.3387055339628269]
-        vtxWorldPosition.append( curPointPosition )
-    return vtxWorldPosition
 
 
 #precalculate random values
